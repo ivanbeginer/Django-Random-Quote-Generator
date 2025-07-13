@@ -1,13 +1,13 @@
-from django.db.models import F
-from django.shortcuts import render, get_object_or_404
-from django.views import View
 
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from quotes.forms import QuoteFilterForm
 # Create your views here.
 
 from quotes.models import Source,Quote
 import random
 
-from users.views import post_ip_address, get_user
+from users.views import get_user
 
 
 def get_quote():
@@ -34,13 +34,13 @@ def views_logic(request):
         watched_list.append(quote_id)
         user.save()
 
-    return render(request, 'quotes/quote.html', {'quote': random_quote})
+    return render(request, 'quotes/base.html', {'quote': random_quote})
 
 def like_quote(request,quote_id):
     user = get_user(request)
     liked_list = user.liked_quotes['liked_list']
     disliked_list = user.disliked_quotes['disliked_list']
-    watched_list = user.watched_quotes['watched_list']
+
     quote = Quote.objects.get(pk=quote_id)
     quote_id =quote.pk
     if quote_id in disliked_list:
@@ -59,13 +59,13 @@ def like_quote(request,quote_id):
         quote.refresh_from_db()
         liked_list.remove(quote_id)
         user.save()
-    return render(request, 'quotes/quote.html', {'quote': quote})
+    return render(request, 'quotes/base.html', {'quote': quote})
 
 def dislike_quote(request,quote_id):
     user = get_user(request)
     liked_list = user.liked_quotes['liked_list']
     disliked_list = user.disliked_quotes['disliked_list']
-    watched_list = user.watched_quotes['watched_list']
+
     quote = Quote.objects.get(pk=quote_id)
     quote_id = quote.pk
     if quote_id in liked_list:
@@ -84,4 +84,19 @@ def dislike_quote(request,quote_id):
         quote.refresh_from_db()
         disliked_list.remove(quote_id)
         user.save()
-    return render(request, 'quotes/quote.html', {'quote': quote})
+    return render(request, 'quotes/base.html', {'quote': quote})
+def order_by_likes(request):
+    quotes = Quote.objects.order_by('-likes')
+    paginator = Paginator(quotes,10)
+    page_obj = paginator.get_page(request.GET.get('page'))
+    user = get_user(request)
+    watched_list = user.watched_quotes['watched_list']
+    for quote in page_obj:
+        if quote.pk not in watched_list:
+            watched_list.append(quote.pk)
+            Quote.objects.filter(pk=quote.pk).update(views=quote.views+1)
+            quote.refresh_from_db()
+            user.save()
+
+    return render(request,'quotes/filters.html',{'quotes':page_obj})
+
