@@ -6,8 +6,7 @@ services:
       DB_NAME: randomgenerator
       DB_USER: postgres
       DB_PASSWORD: 228666
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+
     ports:
       - "5432:5432"
 
@@ -16,12 +15,9 @@ services:
     command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 DjangoRandomQuoteGenerator.wsgi:application"
     environment:
       DATABASE_URL: postgres://postgres:228666@db:5432/randomgenerator
-    volumes:
-      - ./src:/app
+
     ports:
       - "8000:8000"
     depends_on:
       - db
 
-volumes:
-  postgres_data:
