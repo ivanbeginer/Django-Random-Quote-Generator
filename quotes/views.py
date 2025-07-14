@@ -1,20 +1,21 @@
 
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from quotes.forms import QuoteFilterForm
+
 # Create your views here.
 
-from quotes.models import Source,Quote
+from quotes.models import Quote
 import random
 
 from users.views import get_user
 
 
 def get_quote():
+    """Получает рандомную цитату"""
     weights_list = []
     text_list = []
     for quote in Quote.objects.all():
-        quote.less_than_three()
+
         weights_list.append(quote.weight)
         text_list.append(quote)
     result = random.choices(text_list,weights=weights_list)
@@ -22,7 +23,7 @@ def get_quote():
 
 
 def views_logic(request):
-
+    """Регистрерует просмотр цитаты пользователем"""
     user = get_user(request)
 
     watched_list = user.watched_quotes['watched_list']
@@ -37,6 +38,7 @@ def views_logic(request):
     return render(request, 'quotes/base.html', {'quote': random_quote})
 
 def like_quote(request,quote_id):
+    """Лайк цитаты"""
     user = get_user(request)
     liked_list = user.liked_quotes['liked_list']
     disliked_list = user.disliked_quotes['disliked_list']
@@ -62,6 +64,7 @@ def like_quote(request,quote_id):
     return render(request, 'quotes/base.html', {'quote': quote})
 
 def dislike_quote(request,quote_id):
+    """Дизлайк цитаты"""
     user = get_user(request)
     liked_list = user.liked_quotes['liked_list']
     disliked_list = user.disliked_quotes['disliked_list']
@@ -86,6 +89,7 @@ def dislike_quote(request,quote_id):
         user.save()
     return render(request, 'quotes/base.html', {'quote': quote})
 def order_by_likes(request):
+    """Сортирует цитаты по убыванию количества лайков"""
     quotes = Quote.objects.order_by('-likes')
     paginator = Paginator(quotes,10)
     page_obj = paginator.get_page(request.GET.get('page'))

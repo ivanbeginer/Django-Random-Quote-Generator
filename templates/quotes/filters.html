@@ -1,12 +1,23 @@
+{% extends "quotes/base.html" %}
 
-
-
+<title> {% block title %} Топ-10 цитат {% endblock %} </title>
 <body>
-
+{% block content %}
 {% for quote in quotes %}
-        {{ quote.text }}
+        <div class="quote-text">
+        {{ quote.text }} ({{ quote.source.name }} - {{ quote.source.author }})
+        </div>
         <br>
 {% endfor %}
+{% endblock %}
+{% block buttons %}
+        <a href="{% url 'quotes:get_quote' %}">
+            <button>
+                <i class="fas fa-random"></i> Новая цитата
+            </button>
+        </a>
+{% endblock %}
+
+
 
 </body>
-</html>

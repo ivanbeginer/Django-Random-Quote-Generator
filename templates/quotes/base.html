@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Цитата дня</title>
+    <title>{% block title %}Цитата дня{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
+
+</head>
+<style>
         body {
             background-color: #121212;
             color: #e0e0e0;
@@ -124,18 +126,16 @@
             font-size: 1.2rem;
         }
     </style>
-</head>
 <body>
 
     <div class="quote-container">
-
+        {% block content %}
         <div class="quote-text">
             "{{ quote.text }}"
         </div>
 
         <div class="quote-source">
             <span class="source-title">{{ quote.source.name }}</span>
-
             <span class="source-author">— {{ quote.source.author }}</span>
 
         </div>
@@ -147,15 +147,15 @@
         </div>
 
         <div class="vote-buttons">
-            <form method="post" action="{% url 'quotes:like_quote' quote.id %}" class="vote-form">
-                {% csrf_token %}
+           <a href="{% url 'quotes:like_quote' quote.pk %}" class="vote-form">
+
                 <button type="submit" class="like-btn">
                     <i class="fas fa-thumbs-up"></i>
                     <span class="count">{{ quote.likes }}</span>
                 </button>
-            </form>
+            </a>
 
-            <form method="post" action="{% url 'quotes:dislike_quote' quote.id %}" class="vote-form">
+            <form method="post" action="{% url 'quotes:dislike_quote' quote.pk %}" class="vote-form">
                 {% csrf_token %}
                 <button type="submit" class="dislike-btn">
                     <i class="fas fa-thumbs-down"></i>
@@ -163,22 +163,28 @@
                 </button>
             </form>
         </div>
+         {% endblock %}
     </div>
 
     <div class="action-buttons">
-        <form method="post" action="{% url 'quotes:get_quote' %}">
-            {% csrf_token %}
-            <button type="submit">
+        {% block buttons %}
+        <a href="{% url 'quotes:get_quote' %}">
+            <button>
                 <i class="fas fa-random"></i> Новая цитата
             </button>
-        </form>
+        </a>
 
-        <form method="post" action="{% url 'quotes:order_by_likes' %}" target="_blank">
-            {% csrf_token %}
-            <button type="submit">
+        <a href="{% url 'quotes:order_by_likes' %}" target="_blank">
+            <button >
                 <i class="fas fa-chart-line"></i> Тренды
             </button>
-        </form>
+        </a>
+
+
+        <a href="{% url 'quotes:filter_by_likes' %}"><button> Понравившиеся </button></a>
+        <a href="{% url 'quotes:filter_by_dislikes' %}"><button> Непонравившиеся </button></a>
+        <a href="{% url 'quotes:history_of_views' %}"><button> История просмотров </button></a>
+        {% endblock %}
     </div>
 </body>
 </html>

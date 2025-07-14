@@ -6,6 +6,7 @@ import socket as sk
 # Create your views here.
 
 def get_client_ip(request):
+    """Получает ip пользователя"""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
@@ -14,6 +15,7 @@ def get_client_ip(request):
     return ip
 
 def post_ip_address(request):
+    """Добавляет пользователя по ip"""
     user = User(ip_address=get_client_ip(request),watched_quotes={'watched_list':[]},liked_quotes={'liked_list':[]},disliked_quotes={'disliked_list':[]})
     user.save()
     return user
