@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-s)+b!nrz(d8kke+qys3a-)=%4n-5avy05q^s2mx54b%6po+yuu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ivanbeginner.pythonanywhere.com','127.0.0.1']
 
 
 # Application definition
@@ -79,12 +79,12 @@ WSGI_APPLICATION = 'DjangoRandomQuoteGenerator.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER':os.getenv('DB_USER'),
-        'PASSWORD':os.getenv('DB_PASSWORD'),
-        'HOST':os.getenv('DB_HOST','db'),
-        'PORT':os.getenv('DB_PORT')
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mybase',
+        # 'USER':os.getenv('DB_USER'),
+        # 'PASSWORD':os.getenv('DB_PASSWORD'),
+        # 'HOST':os.getenv('DB_HOST','db'),
+        # 'PORT':os.getenv('DB_PORT')
     }
 }
 

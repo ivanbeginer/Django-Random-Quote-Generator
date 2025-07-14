@@ -15,7 +15,6 @@ def get_quote():
     weights_list = []
     text_list = []
     for quote in Quote.objects.all():
-
         weights_list.append(quote.weight)
         text_list.append(quote)
     result = random.choices(text_list,weights=weights_list)

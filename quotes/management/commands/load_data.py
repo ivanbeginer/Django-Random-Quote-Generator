@@ -37,6 +37,16 @@ class Command(BaseCommand):
                 '''Загрузка с валидацией каждого объекта'''
                 with transaction.atomic():
                     for item in data:
+                        if item['model']=='quotes.source':
+                            from quotes.models import Source
+                            source = Source(
+                                id=item['pk'],
+                                name=item['fields']['name'],
+                                author=item['fields']['author'],
+                                year = item['fields']['year'],
+                                type = item['fields']['type']
+                            )
+                            source.save()
                         if item['model'] == 'quotes.quote':
                             from quotes.models import Quote
                             quote = Quote(
@@ -49,12 +59,13 @@ class Command(BaseCommand):
                             )
                             quote.save()
 
+
+
             self.stdout.write(self.style.SUCCESS(f'Успешно загружено {len(data)} объектов'))
 
         except ValidationError as e:
             self.stdout.write(self.style.ERROR(f'Ошибка валидации: {e}'))
-        except Exception as e:
-            self.stdout.write(self.style.ERROR(f'Ошибка загрузки: {e}'))
+
 
 
 
