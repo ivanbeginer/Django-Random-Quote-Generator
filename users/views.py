@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from users.models import User
-import socket as sk
+
 
 # Create your views here.
 

@@ -1,12 +1,12 @@
 from django.urls import path
 
-from quotes.views import get_quote, views_logic, like_quote, dislike_quote, order_by_likes
+from quotes.views import register_view, like_quote, dislike_quote, order_by_likes
 from quotes.filters import  filter_by_likes, filter_by_dislikes, history_of_views
 
 app_name = 'quotes'
 
 urlpatterns = [
-    path('',views_logic,name='get_quote'),
+    path('',register_view,name='get_quote'),
     path('like_quote/<int:quote_id>',like_quote,name='like_quote'),
     path('dislike_quote/<int:quote_id>',dislike_quote,name='dislike_quote'),
     path('trends/',order_by_likes,name='order_by_likes'),

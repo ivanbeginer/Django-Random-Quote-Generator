@@ -1,5 +1,5 @@
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 
 # Create your views here.
@@ -22,7 +22,7 @@ def get_quote():
     return result[0]
 
 
-def views_logic(request):
+def register_view(request):
     """Регистрерует просмотр цитаты пользователем"""
     user = get_user(request)
 
