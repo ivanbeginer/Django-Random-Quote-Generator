@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from quotes.models import Quote
 import random
 
-from users.views import get_user
+from viewer.views import get_viewer
 
 
 def get_quote():
@@ -23,24 +23,24 @@ def get_quote():
 
 def register_view(request):
     """Регистрерует просмотр цитаты пользователем"""
-    user = get_user(request)
+    viewer = get_viewer(request)
 
-    watched_list = user.watched_quotes['watched_list']
+    watched_list = viewer.watched_quotes['watched_list']
     random_quote = get_quote()
     quote_id = random_quote.pk
     if quote_id not in watched_list:
         Quote.objects.filter(pk=quote_id).update(views = random_quote.views+1)
         random_quote.refresh_from_db()
         watched_list.append(quote_id)
-        user.save()
+        viewer.save()
 
     return render(request, 'quotes/base.html', {'quote': random_quote})
 
 def like_quote(request,quote_id):
     """Лайк цитаты"""
-    user = get_user(request)
-    liked_list = user.liked_quotes['liked_list']
-    disliked_list = user.disliked_quotes['disliked_list']
+    viewer = get_viewer(request)
+    liked_list = viewer.liked_quotes['liked_list']
+    disliked_list = viewer.disliked_quotes['disliked_list']
 
     quote = Quote.objects.get(pk=quote_id)
     quote_id =quote.pk
@@ -49,22 +49,22 @@ def like_quote(request,quote_id):
         quote.refresh_from_db()
         liked_list.append(quote_id)
         disliked_list.remove(quote_id)
-        user.save()
+        viewer.save()
     elif  quote_id not in liked_list and quote_id not in disliked_list:
         Quote.objects.filter(pk=quote_id).update(likes=quote.likes + 1)
         quote.refresh_from_db()
         liked_list.append(quote_id)
-        user.save()
+        viewer.save()
     elif quote_id in liked_list:
         Quote.objects.filter(pk=quote_id).update(likes=quote.likes - 1)
         quote.refresh_from_db()
         liked_list.remove(quote_id)
-        user.save()
+        viewer.save()
     return render(request, 'quotes/base.html', {'quote': quote})
 
 def dislike_quote(request,quote_id):
     """Дизлайк цитаты"""
-    user = get_user(request)
+    user = get_viewer(request)
     liked_list = user.liked_quotes['liked_list']
     disliked_list = user.disliked_quotes['disliked_list']
 
@@ -92,7 +92,7 @@ def order_by_likes(request):
     quotes = Quote.objects.order_by('-likes')
     paginator = Paginator(quotes,10)
     page_obj = paginator.get_page(request.GET.get('page'))
-    user = get_user(request)
+    user = get_viewer(request)
     watched_list = user.watched_quotes['watched_list']
     for quote in page_obj:
         if quote.pk not in watched_list:
