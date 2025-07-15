@@ -5,7 +5,7 @@
 {% block content %}
 {% for quote in quotes %}
         <div class="quote-text">
-        {{ quote.text }} ({{ quote.source.name }} - {{ quote.source.author }})
+        {{ quote.text }} ({{ quote.source.name }} - {{ quote.source.author }})   <i class="fas fa-thumbs-up"></i>{{quote.likes}}
         </div>
         <br>
 {% endfor %}
@@ -17,7 +17,5 @@
             </button>
         </a>
 {% endblock %}
-
-
 
 </body>

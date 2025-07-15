@@ -1,13 +1,13 @@
 
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
-
+from viewer.models import Viewer
 # Create your views here.
 
 from quotes.models import Quote
 import random
 
-from viewer.views import get_viewer
+from viewer.views import get_viewer, get_client_ip
 
 
 def get_quote():
@@ -22,8 +22,8 @@ def get_quote():
 
 
 def register_view(request):
-    """Регистрерует просмотр цитаты пользователем"""
-    viewer = get_viewer(request)
+    """Регистрерует просмотр цитаты зрителем"""
+    viewer = Viewer.objects.filter(ip_address=get_client_ip(request))[0]
 
     watched_list = viewer.watched_quotes['watched_list']
     random_quote = get_quote()
@@ -64,9 +64,9 @@ def like_quote(request,quote_id):
 
 def dislike_quote(request,quote_id):
     """Дизлайк цитаты"""
-    user = get_viewer(request)
-    liked_list = user.liked_quotes['liked_list']
-    disliked_list = user.disliked_quotes['disliked_list']
+    viewer = get_viewer(request)
+    liked_list = viewer.liked_quotes['liked_list']
+    disliked_list = viewer.disliked_quotes['disliked_list']
 
     quote = Quote.objects.get(pk=quote_id)
     quote_id = quote.pk
@@ -75,17 +75,17 @@ def dislike_quote(request,quote_id):
         quote.refresh_from_db()
         liked_list.remove(quote_id)
         disliked_list.append(quote_id)
-        user.save()
+        viewer.save()
     elif quote_id not in disliked_list and not quote_id in liked_list:
         Quote.objects.filter(pk=quote_id).update(dislikes=quote.dislikes + 1)
         quote.refresh_from_db()
         disliked_list.append(quote_id)
-        user.save()
+        viewer.save()
     elif quote_id in disliked_list:
         Quote.objects.filter(pk=quote_id).update(dislikes=quote.dislikes - 1)
         quote.refresh_from_db()
         disliked_list.remove(quote_id)
-        user.save()
+        viewer.save()
     return render(request, 'quotes/base.html', {'quote': quote})
 def order_by_likes(request):
     """Сортирует цитаты по убыванию количества лайков"""
