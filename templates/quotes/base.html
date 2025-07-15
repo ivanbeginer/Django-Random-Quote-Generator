@@ -103,17 +103,30 @@
         .like-btn {
             background-color: #2e7d32;
         }
+        .like-btn-yet{
+            background-color: #0d360f
+        }
 
         .like-btn:hover {
             background-color: #1b5e20;
+        }
+        .like-btn-yet:hover {
+            background-color:#2E8B57;
         }
 
         .dislike-btn {
             background-color: #c62828;
         }
+        .dislike-btn-yet{
+            background-color:#8B0000;
+        }
+
 
         .dislike-btn:hover {
             background-color: #8e0000;
+        }
+        .dislike-btn-yet:hover{
+            background-color:#B22222;
         }
 
         .action-buttons {
@@ -148,21 +161,38 @@
         </div>
 
         <div class="vote-buttons">
-           <a href="{% url 'quotes:like_quote' quote.pk %}" class="vote-form">
+            {% if quote.pk in liked_list %}
+               <a href="{% url 'quotes:like_quote' quote.pk %}" class="vote-form">
 
-                <button type="submit" class="like-btn">
-                    <i class="fas fa-thumbs-up"></i>
-                    <span class="count">{{ quote.likes }}</span>
+                    <button type="submit" class="like-btn-yet">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span class="count">{{ quote.likes }}</span>
+                    </button>
+                </a>
+            {% else %}
+                <a href="{% url 'quotes:like_quote' quote.pk %}" class="vote-form">
+
+                    <button type="submit" class="like-btn">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span class="count">{{ quote.likes }}</span>
+                    </button>
+                </a>
+            {% endif %}
+            {% if quote.pk in disliked_list %}
+            <a href="{% url 'quotes:dislike_quote' quote.pk %}" class="vote-form">
+                <button type="submit" class="dislike-btn-yet">
+                    <i class="fas fa-thumbs-down"></i>
+                    <span class="count">{{ quote.dislikes }}</span>
                 </button>
             </a>
-
-            <form method="post" action="{% url 'quotes:dislike_quote' quote.pk %}" class="vote-form">
-                {% csrf_token %}
+            {% else %}
+            <a href="{% url 'quotes:dislike_quote' quote.pk %}" class="vote-form">
                 <button type="submit" class="dislike-btn">
                     <i class="fas fa-thumbs-down"></i>
                     <span class="count">{{ quote.dislikes }}</span>
                 </button>
-            </form>
+            </a>
+            {% endif %}
         </div>
          {% endblock %}
     </div>

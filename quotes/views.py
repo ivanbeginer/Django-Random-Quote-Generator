@@ -60,7 +60,7 @@ def like_quote(request,quote_id):
         quote.refresh_from_db()
         liked_list.remove(quote_id)
         viewer.save()
-    return render(request, 'quotes/base.html', {'quote': quote})
+    return render(request, 'quotes/base.html', {'quote': quote,'liked_list':liked_list})
 
 def dislike_quote(request,quote_id):
     """Дизлайк цитаты"""
@@ -86,7 +86,7 @@ def dislike_quote(request,quote_id):
         quote.refresh_from_db()
         disliked_list.remove(quote_id)
         viewer.save()
-    return render(request, 'quotes/base.html', {'quote': quote})
+    return render(request, 'quotes/base.html', {'quote': quote,'disliked_list':disliked_list})
 def order_by_likes(request):
     """Сортирует цитаты по убыванию количества лайков"""
     quotes = Quote.objects.order_by('-likes')
@@ -107,5 +107,5 @@ def order_by_likes(request):
             quote.refresh_from_db()
             user.save()
 
-    return render(request,'quotes/filters.html',{'quotes':page_obj})
+    return render(request,'quotes/trends.html',{'quotes':page_obj})
 
