@@ -23,7 +23,7 @@ def get_quote():
 
 def register_view(request):
     """Регистрерует просмотр цитаты зрителем"""
-    viewer = Viewer.objects.filter(ip_address=get_client_ip(request))[0]
+    viewer = get_viewer(request)
 
     watched_list = viewer.watched_quotes['watched_list']
     random_quote = get_quote()
