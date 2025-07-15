@@ -82,10 +82,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mybase',
-        # 'USER':os.getenv('DB_USER'),
-        # 'PASSWORD':os.getenv('DB_PASSWORD'),
-        # 'HOST':os.getenv('DB_HOST','db'),
-        # 'PORT':os.getenv('DB_PORT')
+
     }
 }
 
