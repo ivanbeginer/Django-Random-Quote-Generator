@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Цитата дня{% endblock %}</title>
+    <title>{% block title %}Случайная цитата{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 </head>
@@ -177,7 +177,7 @@
 
         <a href="{% url 'quotes:order_by_likes' %}" target="_blank">
             <button >
-                <i class="fas fa-chart-line"></i> Тренды
+                <i class="fas fa-chart-line"></i> Топ-10
             </button>
         </a>
 

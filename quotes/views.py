@@ -90,7 +90,13 @@ def dislike_quote(request,quote_id):
 def order_by_likes(request):
     """Сортирует цитаты по убыванию количества лайков"""
     quotes = Quote.objects.order_by('-likes')
-    paginator = Paginator(quotes,10)
+    liked_quotes = []
+    for quote in quotes:
+        if quote.likes>0:
+            liked_quotes.append(quote)
+
+
+    paginator = Paginator(liked_quotes,10)
     page_obj = paginator.get_page(request.GET.get('page'))
     user = get_viewer(request)
     watched_list = user.watched_quotes['watched_list']
