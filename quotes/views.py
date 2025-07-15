@@ -1,7 +1,7 @@
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.core.paginator import Paginator
-from viewer.models import Viewer
+
 # Create your views here.
 
 from quotes.models import Quote

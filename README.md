@@ -47,6 +47,9 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 ```bash 
+python manage.py load_data json_file.json
+``` 
+```bash 
 python manage.py runserver
 ```
 ## URLS
