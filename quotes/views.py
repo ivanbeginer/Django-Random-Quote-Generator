@@ -24,7 +24,8 @@ def get_quote():
 def register_view(request):
     """Регистрерует просмотр цитаты зрителем"""
     viewer = get_viewer(request)
-
+    liked_list = viewer.liked_quotes['liked_list']
+    disliked_list = viewer.disliked_quotes['disliked_list']
     watched_list = viewer.watched_quotes['watched_list']
     random_quote = get_quote()
     quote_id = random_quote.pk
@@ -34,7 +35,7 @@ def register_view(request):
         watched_list.append(quote_id)
         viewer.save()
 
-    return render(request, 'quotes/base.html', {'quote': random_quote})
+    return render(request, 'quotes/base.html', {'quote': random_quote,'liked_list':liked_list,'disliked_list':disliked_list})
 
 def like_quote(request,quote_id):
     """Лайк цитаты"""

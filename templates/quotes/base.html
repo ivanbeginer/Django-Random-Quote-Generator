@@ -161,39 +161,22 @@
         </div>
 
         <div class="vote-buttons">
-            {% if quote.pk in liked_list %}
-               <a href="{% url 'quotes:like_quote' quote.pk %}" class="vote-form">
+    <!-- Кнопка лайка -->
+        <a href="{% url 'quotes:like_quote' quote.pk %}">
+            <button type="button" class="{% if quote.pk in liked_list %}like-btn-yet{% else %}like-btn{% endif %}">
+                <i class="fas fa-thumbs-up"></i>
+                <span class="count">{{ quote.likes }}</span>
+            </button>
+        </a>
 
-                    <button type="submit" class="like-btn-yet">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span class="count">{{ quote.likes }}</span>
-                    </button>
-                </a>
-            {% else %}
-                <a href="{% url 'quotes:like_quote' quote.pk %}" class="vote-form">
-
-                    <button type="submit" class="like-btn">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span class="count">{{ quote.likes }}</span>
-                    </button>
-                </a>
-            {% endif %}
-            {% if quote.pk in disliked_list %}
-            <a href="{% url 'quotes:dislike_quote' quote.pk %}" class="vote-form">
-                <button type="submit" class="dislike-btn-yet">
-                    <i class="fas fa-thumbs-down"></i>
-                    <span class="count">{{ quote.dislikes }}</span>
-                </button>
-            </a>
-            {% else %}
-            <a href="{% url 'quotes:dislike_quote' quote.pk %}" class="vote-form">
-                <button type="submit" class="dislike-btn">
-                    <i class="fas fa-thumbs-down"></i>
-                    <span class="count">{{ quote.dislikes }}</span>
-                </button>
-            </a>
-            {% endif %}
-        </div>
+        <!-- Кнопка дизлайка -->
+        <a href="{% url 'quotes:dislike_quote' quote.pk %}">
+            <button type="button" class="{% if quote.pk in disliked_list %}dislike-btn-yet{% else %}dislike-btn{% endif %}">
+                <i class="fas fa-thumbs-down"></i>
+                <span class="count">{{ quote.dislikes }}</span>
+            </button>
+        </a>
+    </div>
          {% endblock %}
     </div>
 
