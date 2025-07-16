@@ -25,7 +25,20 @@ class Quote(models.Model):
     views = models.PositiveIntegerField(default=0,verbose_name='Просмотры')
     likes = models.PositiveIntegerField(default=0,verbose_name='Лайки')
     dislikes = models.PositiveIntegerField(default=0,verbose_name='Дизлайки')
-
+    def clean(self):
+        print(',,e,,e')
+        if self.__class__.objects.filter(source=self.source).count() >= 3:
+            raise ValidationError('У одного источника может быть не больше 3 цитат')
+    def save(
+        self,
+        *args,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None,
+    ):
+        self.clean()
+        super().save(*args)
     def __str__(self):
         return f'{self.text}'
 

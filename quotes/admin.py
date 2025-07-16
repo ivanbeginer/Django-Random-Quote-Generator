@@ -9,5 +9,8 @@ class SourceAdmin(admin.ModelAdmin):
 class QuoteAdmin(admin.ModelAdmin):
     list_display = ['text','source','weight','views','likes','dislikes']
 
+
+    
+    
 admin.site.register(Source,SourceAdmin)
 admin.site.register(Quote,QuoteAdmin)
