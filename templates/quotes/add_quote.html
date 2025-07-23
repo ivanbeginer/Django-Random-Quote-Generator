@@ -1,0 +1,30 @@
+{% extends "quotes/base.html" %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавьте свою цитату</title>
+</head>
+<body>
+{% block content%}
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+        <div>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Добавить цитату</button>
+    </form>
+{% endblock content %}
+
+    {% block buttons %}
+    <a href="{% url 'quotes:get_quote' %}"><button>Новая цитата</button></a>
+    {% endblock buttons %}
+</body>
+</html>

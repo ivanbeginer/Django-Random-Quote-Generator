@@ -1,13 +1,15 @@
-
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 
+from quotes.forms import AddQuoteForm
 # Create your views here.
 
 from quotes.models import Quote
 import random
 
-from viewer.views import get_viewer, get_client_ip
+from viewer.views import get_viewer
+
 
 
 def get_quote():
@@ -17,9 +19,9 @@ def get_quote():
     for quote in Quote.objects.all():
         weights_list.append(quote.weight)
         text_list.append(quote)
+
     result = random.choices(text_list,weights=weights_list)
     return result[0]
-
 
 def register_view(request):
     """Регистрерует просмотр цитаты зрителем"""
@@ -34,6 +36,7 @@ def register_view(request):
         random_quote.refresh_from_db()
         watched_list.append(quote_id)
         viewer.save()
+
 
     return render(request, 'quotes/base.html', {'quote': random_quote,'liked_list':liked_list,'disliked_list':disliked_list})
 
@@ -109,4 +112,27 @@ def order_by_likes(request):
             user.save()
 
     return render(request,'quotes/trends.html',{'quotes':page_obj})
+
+
+def add_quote(request):
+    if request.method == "POST":
+        form = AddQuoteForm(request.POST)
+        if form.is_valid():
+            try:
+                data = form.cleaned_data
+                Quote.objects.create(
+                    text=data['text'],
+                    source=data['source'],
+                    weight=data['weight']
+                )
+                messages.success(request, 'Цитата успешно добавлена!')
+                return redirect('quotes:add_quote')
+            except Exception as e:
+                messages.error(request, f'Ошибка при сохранении: {e}')
+        else:
+            messages.warning(request, 'Пожалуйста, исправьте ошибки в форме')
+    else:
+        form = AddQuoteForm()
+
+    return render(request, 'quotes/add_quote.html', {'form': form})
 

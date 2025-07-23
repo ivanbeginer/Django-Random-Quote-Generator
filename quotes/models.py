@@ -27,8 +27,10 @@ class Quote(models.Model):
     dislikes = models.PositiveIntegerField(default=0,verbose_name='Дизлайки')
     def clean(self):
         print(',,e,,e')
-        if self.__class__.objects.filter(source=self.source).count() >= 3:
+        if Quote.objects.filter(source=self.source).count() >= 3:
             raise ValidationError('У одного источника может быть не больше 3 цитат')
+        if Quote.objects.filter(text=self.text).count()>=1:
+            raise ValidationError('Цитата с таким текстом уже существует')
     def save(
         self,
         *args,
